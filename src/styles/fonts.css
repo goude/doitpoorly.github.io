@@ -1,0 +1,16 @@
+@font-face {
+  font-family: "EB Garamond";
+  src: url("/fonts/eb-garamond/EBGaramond-Variable.woff2") format("woff2");
+  font-weight: 400 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "EB Garamond";
+  src: url("/fonts/eb-garamond/EBGaramond-Italic-Variable.woff2")
+    format("woff2");
+  font-weight: 400 800;
+  font-style: italic;
+  font-display: swap;
+}

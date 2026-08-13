@@ -1,0 +1,165 @@
+@import "./fonts.css";
+
+/* Palette lifted from doit-paper's daily-note.typ rubrication scheme:
+   ink/rouge/wash/hairline — same "classical book typography" family. */
+:root {
+  color-scheme: light dark;
+  --bg: #faf8f5;
+  --fg: #33333b;
+  --accent: #a63a3a;
+  --muted: #75757e;
+  --border: #e3e0da;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #1c1a17;
+    --fg: #e8e3da;
+    --accent: #c97b6a;
+    --muted: #9a958c;
+    --border: #3a362f;
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "EB Garamond", serif;
+  font-size: 1.125rem;
+  color: var(--fg);
+  background: var(--bg);
+  line-height: 1.6;
+}
+
+h1,
+h2,
+h3 {
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+header {
+  padding: 2.5rem 1.5rem 1rem;
+  max-width: 680px;
+  margin: 0 auto;
+}
+
+header h1 {
+  margin: 0 0 0.25rem;
+  font-size: 2rem;
+}
+
+header p {
+  margin: 0;
+  color: var(--muted);
+  font-style: italic;
+}
+
+nav {
+  display: flex;
+  gap: 1.5rem;
+  padding: 0 1.5rem 1.5rem;
+  max-width: 680px;
+  margin: 0 auto;
+  border-bottom: 1px solid var(--border);
+}
+
+nav a {
+  color: var(--fg);
+  text-decoration: none;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+nav a:hover,
+nav a[aria-current="page"] {
+  color: var(--accent);
+}
+
+main {
+  padding: 2rem 1.5rem 3rem;
+  max-width: 680px;
+  margin: 0 auto;
+}
+
+footer {
+  padding: 2rem 1.5rem;
+  max-width: 680px;
+  margin: 0 auto;
+  color: var(--muted);
+  font-size: 0.875rem;
+  border-top: 1px solid var(--border);
+}
+
+a {
+  color: var(--accent);
+}
+
+.meta {
+  color: var(--muted);
+  font-style: italic;
+  margin-top: -0.5rem;
+}
+
+.tags {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  list-style: none;
+  margin: 0.5rem 0 1.5rem;
+  padding: 0;
+}
+
+.tags li {
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 0.1rem 0.75rem;
+  font-size: 0.875rem;
+  color: var(--muted);
+}
+
+.build-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.build-list li {
+  padding: 1rem 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.build-list li:first-child {
+  padding-top: 0;
+}
+
+.build-list h2 {
+  margin: 0 0 0.25rem;
+  font-size: 1.375rem;
+}
+
+.build-list a {
+  text-decoration: none;
+  color: var(--fg);
+}
+
+.build-list a:hover {
+  color: var(--accent);
+}
+
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+
+.gallery img {
+  width: 100%;
+  height: auto;
+  border-radius: 4px;
+  display: block;
+}
