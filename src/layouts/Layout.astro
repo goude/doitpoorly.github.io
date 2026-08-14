@@ -1,5 +1,6 @@
 ---
 import "../styles/global.css";
+import { execSync } from "node:child_process";
 
 interface Props {
   title?: string;
@@ -8,6 +9,20 @@ interface Props {
 
 const { title, current = "" } = Astro.props;
 const fullTitle = title ? `${title} · doitpoorly` : "doitpoorly";
+
+// Patch = commit count, so it's structurally guaranteed to bump on every
+// build that includes a new commit (CI needs a full clone, not a shallow
+// one, for this to be meaningful -- see astro.yml's checkout step).
+function siteVersion(): string {
+  try {
+    const count = execSync("git rev-list --count HEAD").toString().trim();
+    const sha = execSync("git rev-parse --short HEAD").toString().trim();
+    return `0.0.${count} (${sha})`;
+  } catch {
+    return "dev";
+  }
+}
+const version = siteVersion();
 ---
 
 <!doctype html>
@@ -38,6 +53,6 @@ const fullTitle = title ? `${title} · doitpoorly` : "doitpoorly";
     <main>
       <slot />
     </main>
-    <footer>&copy; doitpoorly</footer>
+    <footer>&copy; doitpoorly · v{version}</footer>
   </body>
 </html>
