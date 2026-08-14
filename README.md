@@ -50,3 +50,39 @@ New folder under `src/content/builds/`, an `index.md` with `title`,
 Convert photos to AVIF first (HEIC → PNG → `avifenc`) — Astro resizes for
 display, but starts from the vendored file, so don't commit multi-MB
 originals.
+
+## Adding an annotated figure
+
+Copy a `<figure id="fig-N">` block from `zynthian-rpi4-to-rpi5/index.md`
+(that post has all five mark types plus a live "Annotation vocabulary"
+section) and edit the coordinates, labels, and image. Plain CSS + `:target`
+— no JavaScript, no component.
+
+- **Ids pair up**: `f<fig>-m<n>` on the marker over the photo, `f<fig>-k<n>`
+  on its line in the caption's key. Marker links to its key item, key item
+  links back — that's the whole mechanism.
+- **No blank line inside the `<figure>` block.** A blank line ends the raw
+  HTML and everything after it renders as a code block instead of markup.
+- **A margin-thumbnail annotation inside a `[^footnote]` definition goes on
+  one physical line**, appended straight after the footnote text with no
+  line break. A newline + indent silently detaches it from the footnote —
+  it renders as a stray block at the end of the page instead of the margin
+  thumbnail. Reproduced once while building the reference post; not a
+  theoretical warning.
+- Coordinates are percentages of the `.anno-plate`, so they survive any
+  column width.
+
+After `npm run build`, check every marker link actually resolves — a typo'd
+id fails silently in the browser:
+
+```bash
+npm run build && comm -23 \
+  <(grep -o 'href="#[^"]*"' dist/builds/<slug>/index.html | sed 's/href="#//;s/"//' | grep -v '^$' | sort -u) \
+  <(grep -o 'id="[^"]*"'   dist/builds/<slug>/index.html | sed 's/id="//;s/"//'   | sort -u)
+# empty output = every anchor resolves
+```
+
+If this ever grows past a handful of posts and hand-typed ids start
+actually breaking, revisit an MDX component — not before; `.md` files
+can't use `.astro` components at all, so that's a bigger step than it
+sounds.

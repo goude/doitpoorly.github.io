@@ -281,6 +281,416 @@ main.post figcaption {
   color: var(--muted);
 }
 
+/* --- annotated figures ----------------------------------------------------
+   Plain CSS + <a href="#id"> -- no JavaScript. Markers are anchors
+   positioned in percentages over a .anno-plate; the caption key is an
+   ordinary <ol>. Marker -> key item and key item -> marker are both real
+   links, so :target does the highlighting in either direction. -------- */
+
+.anno-plate {
+  position: relative;
+  display: block;
+  border-radius: 3px;
+  overflow: hidden;
+  background: var(--wash);
+}
+
+/* Overrides the fixed 4/3 crop above: an annotated photo must show all of
+   itself, or the percentage coordinates point at cropped-away pixels. The
+   long-form selector has to out-specify `main.post figure img` -- keep
+   both, don't collapse them, the short one alone loses the cascade. */
+.anno-plate > img,
+main.post figure .anno-plate > img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: auto;
+  object-fit: fill;
+  border-radius: 0;
+}
+
+/* One face for every mark -- light fill, dark hairline, white halo --
+   shared by dots, region badges and leader flags, so contrast never
+   depends on shape. Reads on pale wood and black anodising alike. */
+.anno-mark,
+.anno-lead .anno-flag {
+  color: #26241f;
+  background: rgba(250, 248, 245, 0.94);
+  border: 1.5px solid #26241f;
+  box-shadow:
+    0 0 0 1.5px rgba(255, 255, 255, 0.8),
+    0 1px 4px rgba(0, 0, 0, 0.35);
+  font-family: var(--mono);
+  line-height: 1;
+  text-decoration: none;
+  scroll-margin: 7rem;
+  transition:
+    background-color 120ms,
+    color 120ms,
+    scale 120ms;
+}
+
+/* Hit target padded past 44px without a 44px dot. */
+.anno-mark::before,
+.anno-lead .anno-flag::before {
+  content: "";
+  position: absolute;
+  inset: -7px;
+  border-radius: inherit;
+}
+
+.anno-mark {
+  position: absolute;
+  translate: -50% -50%;
+  z-index: 2;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: 0.78rem;
+  font-variant-numeric: lining-nums;
+  letter-spacing: 0;
+}
+
+.anno-mark:hover {
+  scale: 1.08;
+}
+
+/* Linked-to state, in rouge, with one polite pulse. Nothing depends on
+   colour alone -- the light/dark face swap already carries the meaning. */
+.anno-mark:target,
+.anno-mark:focus-visible {
+  color: var(--bg);
+  background: var(--accent);
+  border-color: rgba(255, 255, 255, 0.95);
+  box-shadow:
+    0 0 0 1.5px rgba(0, 0, 0, 0.4),
+    0 1px 5px rgba(0, 0, 0, 0.45);
+  outline: none;
+}
+
+.anno-mark:target {
+  animation: anno-pulse 1.6s ease-out 1;
+}
+
+@keyframes anno-pulse {
+  0% {
+    box-shadow:
+      0 0 0 1.5px rgba(0, 0, 0, 0.4),
+      0 0 0 0 color-mix(in oklab, var(--accent) 60%, transparent);
+  }
+  70% {
+    box-shadow:
+      0 0 0 1.5px rgba(0, 0, 0, 0.4),
+      0 0 0 14px color-mix(in oklab, var(--accent) 0%, transparent);
+  }
+  100% {
+    box-shadow:
+      0 0 0 1.5px rgba(0, 0, 0, 0.4),
+      0 1px 5px rgba(0, 0, 0, 0.45);
+  }
+}
+
+/* Hover / focus tooltip on the marker -- the label without the clutter.
+   Decoration only: every label also exists as text in the key. */
+.anno-tip {
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 9px);
+  translate: -50% 0;
+  max-width: 15ch;
+  width: max-content;
+  font-family: var(--mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.02em;
+  line-height: 1.35;
+  text-align: center;
+  padding: 0.3em 0.5em;
+  border-radius: 2px;
+  color: #26241f;
+  background: rgba(250, 248, 245, 0.95);
+  border: 1px solid rgba(38, 36, 31, 0.55);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+  opacity: 0;
+  translate: -50% 4px;
+  transition:
+    opacity 120ms,
+    translate 120ms;
+  pointer-events: none;
+}
+
+.anno-mark:hover .anno-tip,
+.anno-mark:focus-visible .anno-tip,
+.anno-mark:target .anno-tip {
+  opacity: 1;
+  translate: -50% 0;
+}
+
+/* Region: an area rather than a point. Double stroke, same contrast logic. */
+.anno-region {
+  position: absolute;
+  z-index: 1;
+  border-radius: 2px;
+  border: 1.5px solid rgba(250, 248, 245, 0.92);
+  box-shadow:
+    0 0 0 1.5px rgba(0, 0, 0, 0.55),
+    inset 0 0 0 1.5px rgba(0, 0, 0, 0.35);
+}
+
+/* Badge on the region's bottom-left corner: leader flags run along the
+   upper half of a plate, and marker/flag sizes are absolute while the
+   plate's height is not, so a top-corner badge collides with them at
+   phone height. */
+.anno-region > .anno-mark {
+  left: 0;
+  top: 100%;
+  translate: -50% -50%;
+}
+
+.anno-region:target {
+  border-color: var(--accent);
+  box-shadow:
+    0 0 0 1.5px rgba(0, 0, 0, 0.5),
+    inset 0 0 0 1.5px rgba(0, 0, 0, 0.3);
+}
+
+/* Leader: a label parked in empty space with a hairline back to the part.
+   Horizontal only, a technical-drawing habit. Position a leader from the
+   side it points away from (left: in the left half, right: in the right
+   half) so the flag always grows inboard and can never be clipped by the
+   plate at narrow widths. data-dir flips the hairline's dot. */
+.anno-lead {
+  position: absolute;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 0;
+}
+
+.anno-lead[data-dir="left"] {
+  flex-direction: row-reverse;
+}
+
+.anno-lead .anno-flag {
+  position: relative;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.5em;
+  font-size: 0.6875rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  padding: 0.28em 0.5em;
+  border-radius: 2px;
+  backdrop-filter: blur(2px);
+}
+
+.anno-lead .anno-rule {
+  flex: 0 0 auto;
+  width: var(--len, 56px);
+  height: 0;
+  border-top: 1px solid rgba(250, 248, 245, 0.95);
+  box-shadow: 0 0 0 0.5px rgba(0, 0, 0, 0.5);
+  position: relative;
+}
+
+.anno-lead .anno-rule::after {
+  content: "";
+  position: absolute;
+  right: -3px;
+  top: -3px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(250, 248, 245, 0.95);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.55);
+}
+
+.anno-lead[data-dir="left"] .anno-rule::after {
+  right: auto;
+  left: -3px;
+}
+
+.anno-lead .anno-flag b {
+  font-weight: 400;
+  color: var(--accent);
+}
+
+.anno-lead .anno-flag:hover,
+.anno-lead .anno-flag:target {
+  color: var(--bg);
+  background: var(--accent);
+  border-color: rgba(255, 255, 255, 0.9);
+}
+
+.anno-lead .anno-flag:hover b,
+.anno-lead .anno-flag:target b {
+  color: var(--bg);
+}
+
+/* The key: caption becomes a legend you can read on its own. */
+.anno-key {
+  list-style: none;
+  margin: 0.75rem 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  column-gap: var(--gutter);
+  row-gap: 0.1rem;
+  max-width: 100%;
+}
+
+.anno-key li {
+  margin: 0;
+  font-size: 0.9375rem;
+  line-height: 1.45;
+  scroll-margin: 7rem;
+  border-radius: 2px;
+}
+
+.anno-key a {
+  display: grid;
+  grid-template-columns: 1.7em 1fr;
+  gap: 0.5em;
+  align-items: baseline;
+  padding: 0.28em 0.35em;
+  text-decoration: none;
+  color: var(--fg);
+  border-radius: 2px;
+}
+
+.anno-key a:hover {
+  background: var(--wash);
+}
+
+.anno-key .anno-num {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  font-variant-numeric: lining-nums;
+  color: var(--accent);
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  width: 1.55em;
+  height: 1.55em;
+  display: grid;
+  place-items: center;
+}
+
+.anno-key .anno-gloss {
+  color: var(--muted);
+  font-style: italic;
+}
+
+.anno-key li:target {
+  background: color-mix(in oklab, var(--accent) 8%, transparent);
+}
+
+.anno-key li:target .anno-num {
+  color: var(--bg);
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+/* Inline reference in running prose. */
+.anno-ref {
+  text-decoration-color: color-mix(in oklab, var(--accent) 40%, transparent);
+  text-underline-offset: 0.16em;
+}
+
+.anno-chip {
+  display: inline-grid;
+  place-items: center;
+  width: 1.5em;
+  height: 1.5em;
+  margin-left: 0.25em;
+  vertical-align: -0.02em;
+  line-height: 1;
+  border-radius: 50%;
+  font-family: var(--mono);
+  font-size: 0.66em;
+  font-variant-numeric: lining-nums;
+  color: var(--bg);
+  background: var(--accent);
+  text-decoration: none;
+}
+
+.figref {
+  font-family: var(--mono);
+  font-size: 0.8em;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+/* Figure label above the caption text, so cross-references have a target. */
+.fig-label {
+  font-family: var(--mono);
+  font-style: normal;
+  font-size: 0.6875rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-right: 0.6em;
+}
+
+/* A margin-column thumbnail: same vocabulary at 220px. */
+.sidenote .anno-plate {
+  margin-top: 0.5rem;
+}
+
+.sidenote .anno-mark {
+  width: 22px;
+  height: 22px;
+  font-size: 0.625rem;
+}
+
+.sidenote .anno-tip {
+  display: none;
+}
+
+/* Vocabulary sheet: a live swatch grid demonstrating all five marks. */
+.vocab {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 1.25rem 2rem;
+  margin: 1rem 0 2rem;
+  padding: 0;
+  list-style: none;
+}
+
+.vocab > li {
+  margin: 0;
+  font-size: 0.875rem;
+  line-height: 1.45;
+  color: var(--muted);
+  font-style: italic;
+}
+
+.vocab .swatch {
+  display: block;
+  position: relative;
+  height: 82px;
+  border-radius: 3px;
+  margin-bottom: 0.5rem;
+  background: repeating-linear-gradient(135deg, #2b2924 0 8px, #3a372f 8px 16px);
+}
+
+.vocab .swatch.pale {
+  background: repeating-linear-gradient(135deg, #e6ddcd 0 8px, #efe8da 8px 16px);
+}
+
+.vocab b {
+  display: block;
+  font-family: var(--mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-weight: 400;
+  color: var(--fg);
+  font-style: normal;
+}
+
 /* --- tables, definition lists, quotes ------------------------------------ */
 table {
   border-collapse: collapse;
@@ -524,7 +934,8 @@ summary {
     margin-inline: -1.25rem;
   }
 
-  main.post figure img {
+  main.post figure img,
+  main.post figure .anno-plate {
     border-radius: 0;
   }
 
@@ -544,5 +955,47 @@ summary {
   blockquote {
     padding: 0;
     font-size: 1.1875rem;
+  }
+
+  /* Phone: bigger dots, key in one column, leader flags shrink to letters. */
+  .anno-mark {
+    width: 34px;
+    height: 34px;
+    font-size: 0.8125rem;
+  }
+
+  .anno-key {
+    grid-template-columns: 1fr;
+    margin-inline: 1.25rem;
+  }
+
+  main.post figure .anno-lead {
+    translate: -50% -50%;
+  }
+
+  main.post figure .anno-lead .anno-rule {
+    display: none;
+  }
+
+  main.post figure .anno-lead:not(:has(b)) {
+    display: none;
+  }
+
+  main.post figure .anno-lead .anno-flag-text {
+    display: none;
+  }
+
+  main.post figure .anno-lead .anno-flag {
+    width: 34px;
+    height: 34px;
+    padding: 0;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    font-size: 0.8125rem;
+  }
+
+  main.post figure .anno-lead .anno-flag b {
+    color: inherit;
   }
 }
