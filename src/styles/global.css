@@ -9,6 +9,17 @@
   --accent: #a63a3a;
   --muted: #75757e;
   --border: #e3e0da;
+
+  /* Measures. --page is the shared outer width for header/main/footer so their
+     left edges line up; --measure + --note + --gutter build the post's
+     text-column / margin-column grid (see main.post below). */
+  --page: 940px;
+  --measure: 620px;
+  --note: 220px;
+  --gutter: 40px;
+
+  --mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+  --wash: color-mix(in oklab, var(--fg) 6%, var(--bg));
 }
 
 @media (prefers-color-scheme: dark) {
@@ -28,10 +39,20 @@
 body {
   margin: 0;
   font-family: "EB Garamond", serif;
-  font-size: 1.125rem;
+  font-size: 1.1875rem;
   color: var(--fg);
   background: var(--bg);
-  line-height: 1.6;
+  line-height: 1.62;
+  text-wrap: pretty;
+  font-variant-numeric: oldstyle-nums;
+}
+
+/* Never inherit a UA sans into running text. */
+main p,
+main li,
+main dd,
+main blockquote {
+  font-family: "EB Garamond", serif;
 }
 
 h1,
@@ -41,84 +62,348 @@ h3 {
   line-height: 1.25;
 }
 
-header {
-  padding: 2.5rem 1.5rem 1rem;
-  max-width: 680px;
-  margin: 0 auto;
+a {
+  color: var(--accent);
 }
 
-header h1 {
-  margin: 0 0 0.25rem;
-  font-size: 2rem;
+/* --- header / nav / footer ------------------------------------------------ */
+header {
+  max-width: var(--page);
+  margin: 0 auto;
+  padding: 3rem 2rem 1.25rem;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 2rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.site-title {
+  display: block;
+  color: var(--fg);
+  text-decoration: none;
+  font-size: 1.375rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
 }
 
 header p {
-  margin: 0;
+  margin: 0.25rem 0 0;
   color: var(--muted);
   font-style: italic;
+  font-size: 1rem;
 }
 
 nav {
   display: flex;
   gap: 1.5rem;
-  padding: 0 1.5rem 1.5rem;
-  max-width: 680px;
-  margin: 0 auto;
-  border-bottom: 1px solid var(--border);
+  font-size: 1rem;
 }
 
 nav a {
-  color: var(--fg);
+  color: var(--muted);
   text-decoration: none;
-  font-weight: 600;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
 }
 
-nav a:hover,
+nav a:hover {
+  color: var(--fg);
+}
+
 nav a[aria-current="page"] {
-  color: var(--accent);
-}
-
-main {
-  padding: 2rem 1.5rem 3rem;
-  max-width: 680px;
-  margin: 0 auto;
+  color: var(--fg);
+  border-bottom: 2px solid var(--accent);
+  padding-bottom: 2px;
 }
 
 footer {
-  padding: 2rem 1.5rem;
-  max-width: 680px;
+  max-width: var(--page);
   margin: 0 auto;
+  padding: 1.5rem 2rem 2.5rem;
+  border-top: 1px solid var(--border);
   color: var(--muted);
   font-size: 0.875rem;
-  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  gap: 2rem;
 }
 
-a {
+.site-version {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+}
+
+/* --- non-post pages: same outer box, text still held to the measure ------- */
+main {
+  max-width: var(--page);
+  margin: 0 auto;
+}
+
+main:not(.post) {
+  padding: 2.5rem 2rem 3.5rem;
+}
+
+main:not(.post) > * {
+  max-width: var(--measure);
+}
+
+/* --- post layout: text column + margin column ---------------------------- */
+main.post {
+  display: grid;
+  grid-template-columns: minmax(0, var(--measure)) var(--note);
+  column-gap: var(--gutter);
+  align-items: start;
+  padding: 2.5rem 2rem 3.5rem;
+}
+
+/* Every direct child defaults to the text column; .sidenote and figure opt out.
+   Grid items don't collapse margins, so block spacing is set explicitly. */
+main.post > * {
+  grid-column: 1;
+}
+
+.post p {
+  margin: 0 0 1.1rem;
+}
+
+.post ul,
+.post ol,
+.post dl,
+.post table,
+.post details {
+  margin: 0 0 1.25rem;
+}
+
+.post-kicker {
+  margin: 0 0 0.5rem;
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
   color: var(--accent);
 }
 
+.post h1 {
+  margin: 0 0 0.75rem;
+  font-size: 2.5rem;
+  line-height: 1.14;
+  letter-spacing: -0.01em;
+}
+
+/* Section heads become rubricated labels rather than bigger serif type. */
+.post h2 {
+  font-family: var(--mono);
+  font-size: 0.8125rem;
+  font-weight: 400;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin: 2.25rem 0 0.6rem;
+}
+
+.post .tags {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  list-style: none;
+  margin: 0 0 2rem;
+  padding: 0;
+  font-size: 0.9375rem;
+  font-style: italic;
+  color: var(--muted);
+}
+
+/* Drafts carry placeholder prose; say so plainly rather than letting a reader
+   mistake filler for the real write-up. Rendered only while draft: true. */
+.draft-note {
+  margin: 0 0 1.75rem;
+  padding: 0.6rem 0.9rem;
+  border: 1px solid var(--border);
+  border-left: 2px solid var(--accent);
+  background: color-mix(in oklab, var(--accent) 4%, transparent);
+  color: var(--muted);
+  font-size: 0.9375rem;
+  font-style: italic;
+  line-height: 1.45;
+}
+
+/* --- sidenotes ----------------------------------------------------------- */
+.sidenote-ref {
+  color: var(--accent);
+  font-size: 0.7em;
+  line-height: 0;
+  vertical-align: super;
+  text-decoration: none;
+  padding-left: 0.1em;
+}
+
+/* Child combinator: main.post > * would otherwise out-specify a bare .sidenote
+   and drag the note back into the text column. */
+main.post > .sidenote {
+  grid-column: 2;
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  color: var(--muted);
+}
+
+.sidenote::before {
+  content: attr(data-n);
+  color: var(--accent);
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  vertical-align: 0.35em;
+  padding-right: 0.4em;
+}
+
+/* --- figures: fill the full column + margin, fixed ratio (no CLS) -------- */
+main.post figure {
+  grid-column: 1 / -1;
+  margin: 1.75rem 0 2rem;
+}
+
+main.post figure img {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  display: block;
+  border-radius: 3px;
+}
+
+main.post figcaption {
+  max-width: var(--measure);
+  margin-top: 0.6rem;
+  font-size: 0.9375rem;
+  font-style: italic;
+  line-height: 1.5;
+  color: var(--muted);
+}
+
+/* --- tables, definition lists, quotes ------------------------------------ */
+table {
+  border-collapse: collapse;
+  width: 100%;
+  font-variant-numeric: tabular-nums;
+}
+
+th {
+  text-align: left;
+  font-weight: 400;
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  border-bottom: 1px solid var(--fg);
+  padding: 0 0.75rem 0.5rem 0;
+}
+
+td {
+  padding: 0.5rem 0.75rem 0.5rem 0;
+  border-bottom: 1px solid var(--border);
+}
+
+td:first-child {
+  color: var(--muted);
+}
+
+dl {
+  display: grid;
+  grid-template-columns: 8rem 1fr;
+  column-gap: 1.5rem;
+  row-gap: 0.4rem;
+  padding: 0.75rem 0;
+  border-block: 1px solid var(--border);
+}
+
+dt {
+  color: var(--muted);
+  font-style: italic;
+}
+
+dd {
+  margin: 0;
+}
+
+blockquote {
+  margin: 1.75rem 0;
+  padding: 0 2.5rem;
+  font-size: 1.25rem;
+  line-height: 1.5;
+  font-style: italic;
+  border: 0;
+}
+
+/* --- inline marks, code, disclosure -------------------------------------- */
+abbr[title] {
+  text-decoration: none;
+  border-bottom: 1px dotted var(--muted);
+  cursor: help;
+}
+
+mark {
+  background: color-mix(in oklab, var(--accent) 12%, transparent);
+  color: inherit;
+  padding: 0 0.15em;
+}
+
+pre,
+code,
+kbd {
+  font-family: var(--mono);
+}
+
+code {
+  font-size: 0.84em;
+  background: var(--wash);
+  border-radius: 2px;
+  padding: 0.05em 0.3em;
+}
+
+kbd {
+  font-size: 0.8125rem;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  padding: 0.05em 0.35em;
+  background: var(--wash);
+}
+
+pre {
+  background: var(--wash);
+  border-radius: 3px;
+  padding: 0.9rem 1rem;
+  font-size: 0.78125rem;
+  line-height: 1.55;
+  overflow-x: auto;
+}
+
+pre code {
+  background: none;
+  border-radius: 0;
+  padding: 0;
+  font-size: inherit;
+}
+
+details {
+  border-block: 1px solid var(--border);
+  padding: 0.6rem 0;
+}
+
+summary {
+  cursor: pointer;
+  font-family: var(--mono);
+  font-size: 0.8125rem;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+}
+
+/* --- listings ------------------------------------------------------------ */
 .meta {
   color: var(--muted);
   font-style: italic;
   margin-top: -0.5rem;
-}
-
-.tags {
-  display: flex;
-  gap: 0.5rem;
-  flex-wrap: wrap;
-  list-style: none;
-  margin: 0.5rem 0 1.5rem;
-  padding: 0;
-}
-
-.tags li {
-  border: 1px solid var(--border);
-  border-radius: 999px;
-  padding: 0.1rem 0.75rem;
-  font-size: 0.875rem;
-  color: var(--muted);
 }
 
 .build-list {
@@ -162,4 +447,102 @@ a {
   height: auto;
   border-radius: 4px;
   display: block;
+}
+
+/* --- mobile: notes fall inline, figures go full-bleed -------------------- */
+@media (max-width: 900px) {
+  body {
+    font-size: 1.125rem;
+    line-height: 1.6;
+  }
+
+  header {
+    padding: 1.75rem 1.25rem 1rem;
+    gap: 1rem;
+  }
+
+  .site-title {
+    font-size: 1.0625rem;
+  }
+
+  /* The tagline can't share a row with the nav at phone widths without
+     wrapping into a three-line block. Title + nav only. */
+  header p {
+    display: none;
+  }
+
+  nav {
+    gap: 1rem;
+    font-size: 0.875rem;
+  }
+
+  footer {
+    padding: 1.25rem 1.25rem 2rem;
+    font-size: 0.8125rem;
+  }
+
+  main:not(.post) {
+    padding: 1.5rem 1.25rem 2.5rem;
+  }
+
+  main.post {
+    display: block;
+    padding: 1.5rem 1.25rem 2.5rem;
+  }
+
+  main p {
+    hyphens: auto;
+  }
+
+  .post-kicker {
+    font-size: 0.6875rem;
+  }
+
+  .post h1 {
+    font-size: 1.875rem;
+    line-height: 1.16;
+  }
+
+  .post h2 {
+    font-size: 0.75rem;
+    margin: 2rem 0 0.5rem;
+  }
+
+  main.post > .sidenote {
+    display: block;
+    margin: 0 0 1.25rem;
+    padding: 0.75rem 0 0.75rem 0.9rem;
+    border-left: 1px solid var(--accent);
+    background: color-mix(in oklab, var(--accent) 4%, transparent);
+  }
+
+  .sidenote::before {
+    font-size: 0.6875rem;
+  }
+
+  main.post figure {
+    margin-inline: -1.25rem;
+  }
+
+  main.post figure img {
+    border-radius: 0;
+  }
+
+  main.post figcaption {
+    margin-inline: 1.25rem;
+  }
+
+  dl {
+    grid-template-columns: 1fr;
+    row-gap: 0.15rem;
+  }
+
+  dt {
+    margin-top: 0.6rem;
+  }
+
+  blockquote {
+    padding: 0;
+    font-size: 1.1875rem;
+  }
 }

@@ -12,24 +12,41 @@ export async function getStaticPaths() {
 
 const { post } = Astro.props;
 const { Content } = await render(post);
+
+// UTC so the kicker reads the same on this box and on the CI runner.
+const kickerDate = post.data.date.toLocaleDateString("en-GB", {
+  day: "numeric",
+  month: "long",
+  year: "numeric",
+  timeZone: "UTC",
+});
 ---
 
-<Layout title={post.data.title} current="builds">
-  <article>
-    <h1>{post.data.title}</h1>
-    <p class="meta">
-      {post.data.date.toLocaleDateString("en-CA")}
-      {post.data.draft ? " · draft" : ""}
-    </p>
-    {
-      post.data.tags.length > 0 && (
-        <ul class="tags">
-          {post.data.tags.map((tag) => (
-            <li>{tag}</li>
-          ))}
-        </ul>
-      )
-    }
-    <Content />
-  </article>
+<!--
+  No <article> wrapper: main.post is the grid, and sidenotes have to be its
+  direct children to land in the margin column beside the paragraph that
+  cites them (see rehype-sidenotes.mjs).
+-->
+<Layout title={post.data.title} current="builds" mainClass="post">
+  {
+    post.data.draft && (
+      <p class="draft-note">
+        Draft — the prose on this page is AI-generated placeholder text. The
+        headings, photos and specs are real; the write-up around them is not
+        written yet.
+      </p>
+    )
+  }
+  <p class="post-kicker">Build log · {kickerDate}</p>
+  <h1>{post.data.title}</h1>
+  {
+    post.data.tags.length > 0 && (
+      <ul class="tags">
+        {post.data.tags.map((tag) => (
+          <li>{tag}</li>
+        ))}
+      </ul>
+    )
+  }
+  <Content />
 </Layout>

@@ -5,9 +5,11 @@ import { execSync } from "node:child_process";
 interface Props {
   title?: string;
   current?: string;
+  /** Extra class on <main>. "post" switches on the text + margin-note grid. */
+  mainClass?: string;
 }
 
-const { title, current = "" } = Astro.props;
+const { title, current = "", mainClass } = Astro.props;
 const fullTitle = title ? `${title} · doitpoorly` : "doitpoorly";
 
 // Patch = commit count, so it's structurally guaranteed to bump on every
@@ -35,24 +37,29 @@ const version = siteVersion();
   </head>
   <body>
     <header>
-      <h1>doitpoorly</h1>
-      <p>A build log for 3D printed projects done poorly, on purpose.</p>
+      <div>
+        <a class="site-title" href="/">doitpoorly</a>
+        <p>A build log for 3D printed projects done poorly, on purpose.</p>
+      </div>
+      <nav>
+        <a href="/" aria-current={current === "home" ? "page" : undefined}
+          >Home</a
+        >
+        <a
+          href="/builds"
+          aria-current={current === "builds" ? "page" : undefined}>Builds</a
+        >
+        <a href="/about" aria-current={current === "about" ? "page" : undefined}
+          >About</a
+        >
+      </nav>
     </header>
-    <nav>
-      <a href="/" aria-current={current === "home" ? "page" : undefined}
-        >Home</a
-      >
-      <a
-        href="/builds"
-        aria-current={current === "builds" ? "page" : undefined}>Builds</a
-      >
-      <a href="/about" aria-current={current === "about" ? "page" : undefined}
-        >About</a
-      >
-    </nav>
-    <main>
+    <main class={mainClass}>
       <slot />
     </main>
-    <footer>&copy; doitpoorly · v{version}</footer>
+    <footer>
+      <span>&copy; doitpoorly</span>
+      <span class="site-version">v{version}</span>
+    </footer>
   </body>
 </html>
