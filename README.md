@@ -47,6 +47,6 @@ npm run build
 
 New folder under `src/content/builds/`, an `index.md` with `title`,
 `date`, `tags`, `cover`, `images` frontmatter, images alongside it.
-Convert photos to AVIF first (HEIC → PNG → `avifenc`, see the vault's
-"What Image Formats to Use" note) — Astro resizes for display, but starts
-from the vendored file, so don't commit multi-MB originals.
+Convert photos to AVIF first (HEIC → PNG → `avifenc`) — Astro resizes for
+display, but starts from the vendored file, so don't commit multi-MB
+originals.
