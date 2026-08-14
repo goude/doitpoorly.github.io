@@ -25,9 +25,9 @@ const kickerDate = post.data.date.toLocaleDateString("en-GB", {
 <!--
   No <article> wrapper: main.post is the grid, and sidenotes have to be its
   direct children to land in the margin column beside the paragraph that
-  cites them (see rehype-sidenotes.mjs).
+  cites them (see plugins/satteri-sidenotes.mjs).
 -->
-<Layout title={post.data.title} current="builds" mainClass="post">
+<Layout title={post.data.title} mainClass="post">
   {
     post.data.draft && (
       <p class="draft-note">

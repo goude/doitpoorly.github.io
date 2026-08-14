@@ -1,5 +1,9 @@
 ---
+import { getCollection } from "astro:content";
 import Layout from "../layouts/Layout.astro";
+
+const posts = await getCollection("builds");
+posts.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 ---
 
 <Layout current="home">
@@ -8,6 +12,25 @@ import Layout from "../layouts/Layout.astro";
     mostly held, and the occasional total disaster. Follow along on
     <a href="https://instagram.com/doitpoorly" target="_blank" rel="noopener"
       >Instagram</a
-    >, or browse the <a href="/builds">build log</a> here.
+    >.
   </p>
+  {
+    posts.length === 0 ? (
+      <p>Nothing posted yet.</p>
+    ) : (
+      <ul class="build-list">
+        {posts.map((post) => (
+          <li>
+            <a href={`/builds/${post.id}`}>
+              <h2>{post.data.title}</h2>
+            </a>
+            <p class="meta">
+              {post.data.date.toLocaleDateString("en-CA")}
+              {post.data.draft ? " · draft" : ""}
+            </p>
+          </li>
+        ))}
+      </ul>
+    )
+  }
 </Layout>

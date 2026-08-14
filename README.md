@@ -3,13 +3,13 @@
 Astro site for the doitpoorly build-log persona (3D printing projects,
 mostly). Deploys to GitHub Pages via `.github/workflows/astro.yml`.
 
-Private for now, developing before going live. `CNAME` names the intended
-custom domain (same setup as goude.github.io) but nothing is wired up in
-DNS or GitHub Pages settings yet.
+Live at `doitpoorly.net`, DNS and GitHub Pages both wired up (same domain
+setup as goude.github.io).
 
 ## Structure
 
-- `src/pages/` — routes: home, `/builds` (list), `/builds/[slug]` (post)
+- `src/pages/` — routes: home (also lists every build), `/builds/[slug]`
+  (post)
 - `src/content/builds/<slug>/index.md` — one folder per build-log post,
   images co-located and referenced by relative path in frontmatter
 - `src/layouts/Layout.astro` — shared header/nav/footer; `mainClass="post"`
