@@ -216,6 +216,31 @@ main.post > * {
   color: var(--muted);
 }
 
+/* Dictionary-entry part-of-speech label, e.g. "adj. phr." under the headword. */
+.entry-pos {
+  margin: 0 0 1.5rem;
+  font-style: italic;
+  font-size: 0.9375rem;
+  color: var(--muted);
+}
+
+/* A figure standing in for an image not yet supplied -- same 4/3 footprint
+   as a real figure img, so the layout doesn't jump once the photo lands. */
+.photo-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: 4 / 3;
+  border: 1px dashed var(--border);
+  border-radius: 3px;
+  background: var(--wash);
+  color: var(--muted);
+  font-style: italic;
+  font-size: 0.9375rem;
+  text-align: center;
+  padding: 1.5rem;
+}
+
 /* Drafts carry placeholder prose; say so plainly rather than letting a reader
    mistake filler for the real write-up. Rendered only while draft: true. */
 .draft-note {
