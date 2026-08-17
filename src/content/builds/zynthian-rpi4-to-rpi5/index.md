@@ -1,6 +1,7 @@
 ---
 title: "Zynthian: Raspberry Pi 4 → Pi 5 upgrade"
 date: 2026-08-13
+description: "Swapping the Pi 4 for a Pi 5 for more throughput and a real NVMe HAT instead of a microSD card."
 tags: [zynthian, raspberry-pi, synth]
 cover: ./IMG_2039.avif
 draft: true

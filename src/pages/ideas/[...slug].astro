@@ -1,0 +1,46 @@
+---
+import { getCollection, render } from "astro:content";
+import { Image } from "astro:assets";
+import Layout from "../../layouts/Layout.astro";
+
+export async function getStaticPaths() {
+  const posts = await getCollection("ideas");
+  return posts.map((post) => ({
+    params: { slug: post.id },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+
+const kickerDate = post.data.date.toLocaleDateString("en-GB", {
+  day: "numeric",
+  month: "long",
+  year: "numeric",
+  timeZone: "UTC",
+});
+---
+
+<Layout title={post.data.title} mainClass="post">
+  {
+    post.data.draft && (
+      <p class="draft-note">
+        Draft — the entry itself is real; the explanatory text below it
+        isn't written yet.
+      </p>
+    )
+  }
+  <p class="post-kicker">Idea · dictionary entry · {kickerDate}</p>
+  <h1>{post.data.title}</h1>
+  <Content />
+  <figure>
+    <Image
+      src={post.data.cover}
+      alt={`Journal entry: ${post.data.title}`}
+      format="avif"
+      style="aspect-ratio: 1 / 1; height: auto;"
+    />
+    <figcaption>The journal entry that started it.</figcaption>
+  </figure>
+</Layout>

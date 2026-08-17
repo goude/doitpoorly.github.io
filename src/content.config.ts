@@ -7,6 +7,7 @@ const builds = defineCollection({
     z.object({
       title: z.string(),
       date: z.date(),
+      description: z.string(),
       tags: z.array(z.string()).default([]),
       cover: image(),
       images: z.array(image()).default([]),
@@ -14,4 +15,16 @@ const builds = defineCollection({
     }),
 });
 
-export const collections = { builds };
+const ideas = defineCollection({
+  loader: glob({ pattern: "**/*.md", base: "./src/content/ideas" }),
+  schema: ({ image }) =>
+    z.object({
+      title: z.string(),
+      date: z.date(),
+      description: z.string(),
+      cover: image(),
+      draft: z.boolean().default(false),
+    }),
+});
+
+export const collections = { builds, ideas };

@@ -1,33 +1,54 @@
 ---
 import { getCollection } from "astro:content";
+import { Image } from "astro:assets";
 import Layout from "../layouts/Layout.astro";
 
-const posts = await getCollection("builds");
-posts.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+const builds = (await getCollection("builds")).map((post) => ({
+  post,
+  kind: "builds",
+}));
+const ideas = (await getCollection("ideas")).map((post) => ({
+  post,
+  kind: "ideas",
+}));
+const feed = [...builds, ...ideas].sort(
+  (a, b) => b.post.data.date.valueOf() - a.post.data.date.valueOf(),
+);
 ---
 
 <Layout current="home">
   <p>
-    This is where the builds live: prints that mostly worked, fixes that
-    mostly held, and the occasional total disaster. Follow along on
+    Prints that mostly worked, fixes that mostly held, the occasional total
+    disaster, and whatever else doesn't fit in a build log. Follow along on
     <a href="https://instagram.com/doitpoorly" target="_blank" rel="noopener"
       >Instagram</a
     >.
   </p>
   {
-    posts.length === 0 ? (
+    feed.length === 0 ? (
       <p>Nothing posted yet.</p>
     ) : (
-      <ul class="build-list">
-        {posts.map((post) => (
+      <ul class="feed">
+        {feed.map(({ post, kind }) => (
           <li>
-            <a href={`/builds/${post.id}`}>
-              <h2>{post.data.title}</h2>
+            <a href={`/${kind}/${post.id}`}>
+              <Image
+                class="feed-thumb"
+                src={post.data.cover}
+                alt=""
+                width={160}
+                height={160}
+                format="avif"
+              />
+              <div class="feed-body">
+                <h2>{post.data.title}</h2>
+                <p class="meta">
+                  {post.data.date.toLocaleDateString("en-CA")}
+                  {post.data.draft ? " · draft" : ""}
+                </p>
+                <p class="feed-desc">{post.data.description}</p>
+              </div>
             </a>
-            <p class="meta">
-              {post.data.date.toLocaleDateString("en-CA")}
-              {post.data.draft ? " · draft" : ""}
-            </p>
           </li>
         ))}
       </ul>
