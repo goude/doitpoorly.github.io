@@ -52,7 +52,7 @@ gets committed as a display asset, so a future re-encode doesn't cost
 generational quality. Not yet enforced by any tooling in this repo —
 judgment call per image for now.
 
-## Tooling on this box (zelda)
+## Tooling on the build machine
 
 `avifenc`/`avifdec` and `cwebp`/`dwebp` are installed. `cjxl`/`oxipng`
 are not (JPEG XL isn't a safe delivery format yet regardless — see the
