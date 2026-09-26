@@ -86,3 +86,7 @@ If this ever grows past a handful of posts and hand-typed ids start
 actually breaking, revisit an MDX component — not before; `.md` files
 can't use `.astro` components at all, so that's a bigger step than it
 sounds.
+
+## Status (2026-09-26)
+
+Active.
