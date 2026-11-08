@@ -155,7 +155,7 @@ Cooling is the other unknown: the fan sits proud of the board by more than the o
 
 ## Annotation vocabulary
 
-Five marks, one contrast rule: a light face, a dark hairline, a white halo. Nothing relies on colour alone. Rouge is only ever the *linked-to* state.
+Five marks, one contrast rule: a light face, a dark hairline, a white halo. Nothing relies on colour alone. Violet, the annotation colour, marks the *linked-to* state.
 
 <ul class="vocab">
   <li>
@@ -197,8 +197,8 @@ Five marks, one contrast rule: a light face, a dark hairline, a white halo. Noth
     Hover, focus or link-target reveals the label.
   </li>
   <li>
-    <span class="swatch pale" style="display: grid; place-items: center; background: var(--wash)">
-      <a class="anno-ref" href="#f1-m2" style="font-size: 0.9375rem; font-style: normal">the ribbon bus<span class="anno-chip">2</span></a>
+    <span class="swatch pale" style="display: grid; place-items: center; background: var(--grey-tint)">
+      <a class="anno-ref" href="#f1-m2" style="font-size: var(--size-body)">the ribbon bus<span class="anno-chip">2</span></a>
     </span>
     <b>Inline reference</b>
     In prose, links to the mark on the photograph.

@@ -1,9 +1,8 @@
 # Image strategy
 
-How images get into this repo and what format they land in. Full research
-behind these calls: `obsidian-git/2026/Best-Practice Image Formats for a
-Git-Backed Build-Log Repository (2026).md` (2026-08-12) — this doc is the
-short, repo-local version of the conclusions, not a re-derivation.
+How images get into this repo and what format they land in: the
+conclusions of a 2026-08-12 survey of image formats for a git-backed
+build log, not a re-derivation.
 
 The repo is simultaneously an archival source, the asset store for the
 built site, and something occasionally browsed raw on github.com. Format
@@ -55,8 +54,7 @@ judgment call per image for now.
 ## Tooling on the build machine
 
 `avifenc`/`avifdec` and `cwebp`/`dwebp` are installed. `cjxl`/`oxipng`
-are not (JPEG XL isn't a safe delivery format yet regardless — see the
-vault doc's Stage 2). HEIC decode goes through ImageMagick's `convert`
+are not (JPEG XL isn't a safe delivery format yet regardless). HEIC decode goes through ImageMagick's `convert`
 (libheif-backed) since there's no `sips` on Linux.
 
 ## What would change this

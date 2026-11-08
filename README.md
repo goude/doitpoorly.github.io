@@ -3,8 +3,7 @@
 Astro site for the doitpoorly build-log persona (3D printing projects,
 mostly). Deploys to GitHub Pages via `.github/workflows/astro.yml`.
 
-Live at `doitpoorly.net`, DNS and GitHub Pages both wired up (same domain
-setup as goude.github.io).
+Live at `doitpoorly.net`, DNS and GitHub Pages both wired up.
 
 ## Structure
 
@@ -16,8 +15,12 @@ setup as goude.github.io).
   switches `<main>` into the two-column post grid
 - `src/plugins/satteri-sidenotes.mjs` — rewrites Markdown footnotes into
   margin sidenotes at build time, wired up in `astro.config.mjs`
-- `src/styles/` — EB Garamond + rubrication palette lifted from
-  doit-paper's `daily-note.typ`
+- `public/theme/` — the vendored house theme (tokens, base styles, the
+  light/dark toggle, Inter and JetBrains Mono, the site icon); never edited
+  here, see `CLAUDE.md`
+- `src/styles/global.css` — the site's own rules, from theme tokens only;
+  why each part looks as it does: [docs/design.md](docs/design.md)
+- `scripts/check-built.mjs` — checks on `dist/` that `just check` runs
 
 ## Post layout
 
@@ -38,9 +41,10 @@ AI-generated placeholder text. It disappears when the flag does.
 ## Development
 
 ```bash
-npm install
-npm run dev
-npm run build
+just install
+just dev       # hot reload
+just check     # build + anchor and token checks; run before every push
+just preview   # serve dist/; `just preview --host` to reach it from another machine
 ```
 
 ## Adding a build-log post
@@ -72,21 +76,14 @@ section) and edit the coordinates, labels, and image. Plain CSS + `:target`
 - Coordinates are percentages of the `.anno-plate`, so they survive any
   column width.
 
-After `npm run build`, check every marker link actually resolves — a typo'd
-id fails silently in the browser:
-
-```bash
-npm run build && comm -23 \
-  <(grep -o 'href="#[^"]*"' dist/builds/<slug>/index.html | sed 's/href="#//;s/"//' | grep -v '^$' | sort -u) \
-  <(grep -o 'id="[^"]*"'   dist/builds/<slug>/index.html | sed 's/id="//;s/"//'   | sort -u)
-# empty output = every anchor resolves
-```
+`just check` fails on any marker or key link whose target id is missing:
+a typo'd id fails silently in the browser otherwise.
 
 If this ever grows past a handful of posts and hand-typed ids start
 actually breaking, revisit an MDX component — not before; `.md` files
 can't use `.astro` components at all, so that's a bigger step than it
 sounds.
 
-## Status (2026-09-26)
+## Status (2026-11-08)
 
-Active.
+Active. Restyled onto the shared house theme.

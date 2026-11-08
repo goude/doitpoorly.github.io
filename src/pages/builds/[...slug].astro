@@ -37,11 +37,11 @@ const kickerDate = post.data.date.toLocaleDateString("en-GB", {
       </p>
     )
   }
-  <p class="post-kicker">Build log · {kickerDate}</p>
+  <p class="post-kicker caps">Build log · {kickerDate}</p>
   <h1>{post.data.title}</h1>
   {
     post.data.tags.length > 0 && (
-      <ul class="tags">
+      <ul class="tags caps">
         {post.data.tags.map((tag) => (
           <li>{tag}</li>
         ))}

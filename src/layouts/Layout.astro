@@ -34,12 +34,18 @@ const version = siteVersion();
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="generator" content={Astro.generator} />
     <title>{fullTitle}</title>
+    <link rel="icon" href="/theme/icons/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/theme/icons/apple-touch-icon.png" />
+    <!-- House theme first (vendored, see CLAUDE.md), then the site's rules. -->
+    <link rel="stylesheet" href="/theme/tokens.css" />
+    <link rel="stylesheet" href="/theme/base.css" />
+    <script is:inline src="/theme/theme.js"></script>
   </head>
   <body>
     <header>
       <div>
         <a class="site-title" href="/">doitpoorly</a>
-        <p>A build log for 3D printed projects done poorly, on purpose.</p>
+        <p class="tagline">A build log for 3D printed projects done poorly, on purpose.</p>
       </div>
       <nav>
         <a href="/" aria-current={current === "home" ? "page" : undefined}
@@ -48,6 +54,7 @@ const version = siteVersion();
         <a href="/about" aria-current={current === "about" ? "page" : undefined}
           >About</a
         >
+        <button data-theme-toggle></button>
       </nav>
     </header>
     <main class={mainClass}>
