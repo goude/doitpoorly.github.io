@@ -1,5 +1,6 @@
 @font-face { font-family: "Inter"; font-weight: 300; font-display: swap; src: url("fonts/inter-Light.woff2") format("woff2"); }
 @font-face { font-family: "Inter"; font-weight: 400; font-display: swap; src: url("fonts/inter-Regular.woff2") format("woff2"); }
+@font-face { font-family: "Inter"; font-weight: 400; font-style: italic; font-display: swap; src: url("fonts/inter-Italic.woff2") format("woff2"); }
 @font-face { font-family: "Inter"; font-weight: 500; font-display: swap; src: url("fonts/inter-Medium.woff2") format("woff2"); }
 @font-face { font-family: "Inter"; font-weight: 600; font-display: swap; src: url("fonts/inter-SemiBold.woff2") format("woff2"); }
 @font-face { font-family: "Inter"; font-weight: 700; font-display: swap; src: url("fonts/inter-Bold.woff2") format("woff2"); }
@@ -19,6 +20,11 @@
   --warn: #8a5a00;
   --ok: #17703f;
   --mark: #6d5bd0;
+
+  --overlay-ground: #fff;
+  --overlay-ink: #000;
+  --overlay-mark: #6d5bd0;
+  --shadow-float: 0 1px 4px color-mix(in srgb, #000 35%, transparent);
 
   --font-text: "Inter", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
   --font-display: "Inter Display", var(--font-text);
@@ -85,7 +91,7 @@
     --error: #ff8a6b;
     --warn: #e0b45c;
     --ok: #6fcf97;
-    --mark: #b4a6ff;
+    --mark: #8c80d6;
     color-scheme: dark;
   }
 }
@@ -101,7 +107,7 @@
   --error: #ff8a6b;
   --warn: #e0b45c;
   --ok: #6fcf97;
-  --mark: #b4a6ff;
+  --mark: #8c80d6;
   color-scheme: dark;
 }
 

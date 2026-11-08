@@ -10,14 +10,6 @@
   --page: 960px;
   --note: 220px;
   --col-gap: calc(2 * var(--gutter));
-
-  /* Overlays on photographs keep one face in both themes (a picture does not
-     change with the theme), so they cannot use --paper/--ink, which flip.
-     These are the light theme's values, held fixed. Site-only until the theme
-     grows overlay tokens of its own. */
-  --overlay-ground: #fff;
-  --overlay-ink: #000;
-  --overlay-mark: #6d5bd0;
 }
 
 /* --- header / nav / footer ------------------------------------------------ */
@@ -198,8 +190,8 @@ main.post > * {
 }
 
 /* Drafts carry placeholder prose; say so plainly rather than letting a reader
-   mistake filler for the real write-up. A state, so the warn signal colour,
-   as a quiet tint with a heavy rule. Rendered only while draft: true. */
+   mistake filler for the real write-up. A note about the page, so a caps
+   label in --warn between --warn hairlines. Rendered only while draft: true. */
 .draft-note {
   max-width: none;
   margin: 0 0 calc(8 * var(--u));
@@ -389,7 +381,7 @@ main.post figure .anno-plate > img {
   border: 1.5px solid var(--overlay-ink);
   box-shadow:
     0 0 0 1.5px color-mix(in srgb, var(--overlay-ground) 80%, transparent),
-    0 1px 4px color-mix(in srgb, var(--overlay-ink) 35%, transparent);
+    var(--shadow-float);
   font-family: var(--font-text);
   font-weight: var(--weight-strong);
   font-variant-numeric: tabular-nums;

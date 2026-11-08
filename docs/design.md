@@ -60,10 +60,9 @@ points at something on this page.
   so it flips with light and dark.
 - **On a photograph** (marks, regions, leader flags, tooltips) a picture
   does not change with the theme, so marks keep one face in both themes:
-  `--overlay-ground`, `--overlay-ink`, `--overlay-mark`, site-only tokens at
-  the top of `global.css` holding the light theme's values. They exist
-  because the theme has no fixed-colour tokens yet; they move upstream if it
-  grows them.
+  the theme's `--overlay-ground`, `--overlay-ink` and `--overlay-mark`
+  (the light theme's values, never redefined for dark), and
+  `--shadow-float` for what floats over the picture.
 - **One face per state:** on the page an annotation number is a violet
   outline at rest (key numbers, inline chips) and fills violet when linked
   to, hovered or focused. Caption links to a figure or mark wear the figure
@@ -101,18 +100,15 @@ then `just preview`.
 **The main discussion: colour on components.** The theme keeps colour to
 one accent and three state colours. This site adds colour to components:
 the whole annotation layer in `--mark` (violet), the draft note in a `--warn`
-tint, and three fixed `--overlay-*` colours for marks on photos. Each is a
-claim to weigh, not a settled rule: does it earn its colour, is violet the
-right carrier, and should the theme adopt the overlay tokens (they live here
-only until it decides).
+label between hairlines, and fixed `--overlay-*` colours for marks on
+photos. Round one weighed each.
 
 Round one (`docs/reviews/2026-11-08-colour.md`) kept violet and the overlay
-tokens, and sent three proposals upstream: a dark `--mark` that differs from
-dark `--accent` in lightness, overlay and float-shadow tokens, and Inter
-Italic. Still open:
+tokens, and sent proposals upstream; the theme adopted them (2026-11-08):
+a dark `--mark` that differs from dark `--accent` in lightness, the overlay
+and float-shadow tokens (this site dropped its copies), Inter Italic
+Regular, and the annotation colour confirmed. Still open:
 
-- Inter has no italic in the theme's font set, so `<em>` renders as a
-  synthesised oblique (proposed upstream).
 - A sidenote with a thumbnail spans three grid rows; a full-width figure right
   after it still leaves a gap, which is an authoring choice.
 - The figure key is held to the caption measure (two columns); letting it span
