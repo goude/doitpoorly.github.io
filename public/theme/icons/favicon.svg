@@ -1,8 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
   <title>doitpoorly</title>
-  <!-- The house mark in the house colours (docs/web.md "Where it lives"): paper tile,
-       an ink box, one accent dot for the new thing. Values are tokens.css's light and
-       dark ones, repeated here because an icon cannot load a stylesheet. -->
   <style>
     .tile { fill: #fff; } .box { stroke: #000; } .cut { fill: #fff; } .dot { fill: #1d4f91; }
     @media (prefers-color-scheme: dark) {
