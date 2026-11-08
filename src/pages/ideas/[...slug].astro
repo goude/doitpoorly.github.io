@@ -26,7 +26,7 @@ const kickerDate = post.data.date.toLocaleDateString("en-GB", {
   {
     post.data.draft && (
       <p class="draft-note">
-        Draft — the entry itself is real; the explanatory text below it
+        <span class="draft-label">Draft</span> — the entry itself is real; the explanatory text below it
         isn't written yet.
       </p>
     )
