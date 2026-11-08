@@ -36,11 +36,18 @@ for one page view (nothing is remembered, by design).
   behind a hairline so its underline does not read as a second current page.
 - **Post head:** a caps kicker (kind and date), the title at
   `--size-display` (`--size-h1` on phones), tags as a caps row.
-- **Draft note:** a state, so `--warn`: an 8% tint with a heavy left rule.
+- **Draft note:** a state, so `--warn`, but not a panel: a caps DRAFT label
+  in `--warn` between two `--warn` hairlines, the full text-column width.
+  Editorial slips (`aside.ed`) take the same shape in grey.
+- **Header and footer rules** are drawn at content width (a background inside
+  the padding), so they end where the title, nav and footer text end.
 - **Feed:** hairline-divided rows, a 96 px square thumbnail, the title Bold
   at `--size-h2`, which turns accent and underlined on hover and focus.
 - **Images** have square corners; figures span both post columns and go
-  full-bleed on phones.
+  full-bleed on phones. No figure is taller than the screen: a portrait
+  photo shrinks (its plate with it, so marks stay put) until it fits.
+- **`<mark>`** is a plain highlight in `--grey-tint`: it points at nothing,
+  so it does not wear the annotation colour.
 
 ## The annotation layer: one colour for "this points at something"
 
@@ -57,6 +64,10 @@ points at something on this page.
   the top of `global.css` holding the light theme's values. They exist
   because the theme has no fixed-colour tokens yet; they move upstream if it
   grows them.
+- **One face per state:** on the page an annotation number is a violet
+  outline at rest (key numbers, inline chips) and fills violet when linked
+  to, hovered or focused. Caption links to a figure or mark wear the figure
+  reference style, like `.figref` in prose.
 - **Mark face:** paper fill, 1.5 px ink hairline, a paper halo and a soft
   shadow (marks float over the picture, the theme's one shadow exception), so
   contrast never depends on the photo behind. The linked-to (`:target`) or
@@ -95,13 +106,15 @@ claim to weigh, not a settled rule: does it earn its colour, is violet the
 right carrier, and should the theme adopt the overlay tokens (they live here
 only until it decides).
 
-Other open questions:
+Round one (`docs/reviews/2026-11-08-colour.md`) kept violet and the overlay
+tokens, and sent three proposals upstream: a dark `--mark` that differs from
+dark `--accent` in lightness, overlay and float-shadow tokens, and Inter
+Italic. Still open:
 
-- The header's heavy rule spans the padded page box, a little wider than the
-  text column.
 - Inter has no italic in the theme's font set, so `<em>` renders as a
-  synthesised oblique.
-- Whether the margin column should also take the figure key on desk widths.
-- A sidenote taller than its paragraph (note 2, with its thumbnail) stretches
-  that grid row and leaves a gap in the text column below the paragraph.
+  synthesised oblique (proposed upstream).
+- A sidenote with a thumbnail spans three grid rows; a full-width figure right
+  after it still leaves a gap, which is an authoring choice.
+- The figure key is held to the caption measure (two columns); letting it span
+  the figure would make it three columns and a third shorter.
 - Editorial-note slips (`aside.ed`) are styled but have no live specimen yet.

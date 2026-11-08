@@ -36,7 +36,11 @@ header {
   gap: var(--gutter);
   padding-top: calc(10 * var(--u));
   padding-bottom: calc(3 * var(--u));
-  border-bottom: var(--rules-heavy) solid var(--ink);
+  /* Drawn as a background inside the padding, so the rule ends where the
+     title and nav end instead of overhanging them. --edge is the padding. */
+  --edge: calc(8 * var(--u));
+  background: linear-gradient(var(--ink), var(--ink)) bottom center /
+    calc(100% - 2 * var(--edge)) var(--rules-heavy) no-repeat;
 }
 
 .site-title {
@@ -105,7 +109,9 @@ footer {
   gap: var(--gutter);
   padding-top: calc(5 * var(--u));
   padding-bottom: calc(10 * var(--u));
-  border-top: var(--rules-hair) solid var(--line);
+  --edge: calc(8 * var(--u));
+  background: linear-gradient(var(--line), var(--line)) top center /
+    calc(100% - 2 * var(--edge)) var(--rules-hair) no-repeat;
   color: var(--grey-text);
   font-size: var(--size-small);
   line-height: var(--pitch-small);
@@ -195,13 +201,21 @@ main.post > * {
    mistake filler for the real write-up. A state, so the warn signal colour,
    as a quiet tint with a heavy rule. Rendered only while draft: true. */
 .draft-note {
+  max-width: none;
   margin: 0 0 calc(8 * var(--u));
-  padding: calc(3 * var(--u)) calc(4 * var(--u));
-  border-left: var(--rules-heavy) solid var(--warn);
-  background: color-mix(in srgb, var(--warn) 8%, var(--paper));
+  padding: calc(2 * var(--u)) 0;
+  border-block: var(--rules-hair) solid var(--warn);
   color: var(--ink);
   font-size: var(--size-body);
   line-height: var(--pitch-body);
+}
+
+.draft-label {
+  color: var(--warn);
+  font-size: var(--size-micro);
+  font-weight: var(--weight-medium);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
 }
 
 /* Editorial note (CLAUDE.md, "Content Authorship"): a visible slip after the
@@ -209,9 +223,8 @@ main.post > * {
    the author's text. */
 aside.ed {
   margin: 0 0 var(--room-block);
-  padding: calc(3 * var(--u)) calc(4 * var(--u));
-  border-left: var(--rules-heavy) solid var(--line-ui);
-  background: var(--grey-tint);
+  padding: calc(2 * var(--u)) 0;
+  border-block: var(--rules-hair) solid var(--line-ui);
   color: var(--grey-text);
   font-size: var(--size-body);
   line-height: var(--pitch-body);
@@ -259,6 +272,12 @@ main.post > .sidenote {
   color: var(--grey-text);
 }
 
+/* A note with a thumbnail outgrows its paragraph; spanning rows lets the
+   next paragraphs sit beside it instead of below a hole. */
+main.post > .sidenote:has(.anno-plate) {
+  grid-row: span 3;
+}
+
 .sidenote::before {
   content: attr(data-n);
   color: var(--mark);
@@ -283,6 +302,22 @@ main.post figure img {
   display: block;
 }
 
+/* No figure taller than the screen, so a picture and its marks share one view.
+   The plate shrinks with its image so mark percentages stay true. Fig. 3's
+   zoomed crop (inline style) is landscape and opts out. */
+main.post figure .anno-plate:not([style]),
+main.post figure > img {
+  width: fit-content;
+  max-width: 100%;
+}
+
+main.post figure .anno-plate:not([style]) > img,
+main.post figure > img {
+  width: auto;
+  max-width: 100%;
+  max-height: calc(100svh - 2 * var(--room-h2-above));
+}
+
 main.post figcaption {
   max-width: var(--measure);
   margin-top: calc(3 * var(--u));
@@ -301,7 +336,8 @@ main.post figcaption {
   color: var(--mark);
 }
 
-.figref {
+.figref,
+main.post figcaption > a[href^="#f"] {
   color: var(--mark);
   font-size: 0.78em;
   font-weight: var(--weight-medium);
@@ -631,13 +667,21 @@ main.post figure .anno-plate > img {
   height: 1.55em;
   margin-left: 0.25em;
   vertical-align: 0.05em;
+  box-sizing: border-box;
+  border: var(--rules-rule) solid var(--mark);
   border-radius: 50%;
-  color: var(--paper);
-  background: var(--mark);
+  color: var(--mark);
   font-size: 0.62em;
   font-weight: var(--weight-strong);
   font-variant-numeric: tabular-nums;
   line-height: 1;
+}
+
+/* One face per state across the layer: outline at rest, fill when pointed at. */
+.anno-ref:hover .anno-chip,
+.anno-ref:focus-visible .anno-chip {
+  color: var(--paper);
+  background: var(--mark);
 }
 
 /* A margin-column thumbnail: same vocabulary at 220px. */
@@ -731,7 +775,7 @@ abbr[title] {
 }
 
 mark {
-  background: color-mix(in srgb, var(--mark) 15%, var(--paper));
+  background: var(--grey-tint);
   color: inherit;
   padding: 0 0.15em;
 }
@@ -829,6 +873,7 @@ summary:hover {
   main,
   footer {
     padding-inline: calc(4 * var(--u));
+    --edge: calc(4 * var(--u));
   }
 
   header {
